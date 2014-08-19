@@ -1,0 +1,5 @@
+[package]
+
+name = "clipboard"
+version = "0.0.1"
+authors = ["Daniel MacDougall <dmacdougall@gmail.com>"]
