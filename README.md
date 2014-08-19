@@ -2,12 +2,14 @@ A clipboard library for Rust.
 
 ## Usage
 
-    extern crate clipboard;
+```rust
+extern crate clipboard;
 
-    fn main() {
-        clipboard::write("foo");
-        println!("{}", clipboard::read().unwrap()); // prints "foo"
-    }
+fn main() {
+    clipboard::write("foo");
+    println!("{}", clipboard::read().unwrap()); // prints "foo"
+}
+```
 
 ## TODO
 
