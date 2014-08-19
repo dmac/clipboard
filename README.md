@@ -11,7 +11,10 @@ fn main() {
 }
 ```
 
+## Notes
+
+* Requires xclip to be installed for Linux
+
 ## TODO
 
-* Support Linux
 * Support Windows
