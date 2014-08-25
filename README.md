@@ -17,4 +17,4 @@ fn main() {
 
 ## TODO
 
-* Support Windows
+* Support reading clipboard on Windows
