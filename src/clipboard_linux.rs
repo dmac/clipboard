@@ -1,4 +1,4 @@
-use std::process::Command;
+use std::process::{Stdio, Command};
 use std::io::Write;
 
 pub fn read() -> Result<String, String> {
@@ -26,7 +26,7 @@ pub fn write(s: &str) -> Result<(), String> {
         Err(e) => return Err(e.detail().unwrap_or("unknown IO error".to_string()))
     }
 
-    let mut child = match Command::new("xclip").args(&["-in", "-selection", "clipboard"]).spawn() {
+    let mut child = match Command::new("xclip").args(&["-in", "-selection", "clipboard"]).stdin(Stdio::capture()).spawn() {
         Ok(child) => child,
         Err(e) => return Err(e.detail().unwrap_or("unknown IO error".to_string()))
     };
