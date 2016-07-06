@@ -1,15 +1,16 @@
 use std::process::{Stdio, Command};
+use std::error::Error;
 use std::io::Write;
 
 pub fn read() -> Result<String, String> {
     match Command::new("which").arg("xclip").status() {
         Ok(status) => if !status.success() { return Err("missing xclip program".to_string()) },
-        Err(e) => return Err(e.detail().unwrap_or("unknown IO error".to_string()))
+        Err(e) => return Err(e.description().to_string())
     }
 
     let output = match Command::new("xclip").args(&["-out", "-selection", "clipboard"]).output() {
         Ok(output) => output,
-        Err(e) => return Err(e.detail().unwrap_or("unknown IO error".to_string()))
+        Err(e) => return Err(e.description().to_string())
     };
 
     let s = match String::from_utf8(output.stdout) {
@@ -21,14 +22,14 @@ pub fn read() -> Result<String, String> {
 }
 
 pub fn write(s: &str) -> Result<(), String> {
-    match Command::new("which").arg("xclip").status() {
-        Ok(status) => if !status.success() { return Err("missing xclip program".to_string()) },
-        Err(e) => return Err(e.detail().unwrap_or("unknown IO error".to_string()))
-    }
+    match Command::new("which").arg("xclip").output() {
+        Ok(output) => if !output.status.success() { return Err("missing xclip program".to_string()) },
+        Err(e) => return Err(e.description().to_string())
+    };
 
-    let mut child = match Command::new("xclip").args(&["-in", "-selection", "clipboard"]).stdin(Stdio::capture()).spawn() {
+    let mut child = match Command::new("xclip").args(&["-in", "-selection", "clipboard"]).stdin(Stdio::piped()).spawn() {
         Ok(child) => child,
-        Err(e) => return Err(e.detail().unwrap_or("unknown IO error".to_string()))
+        Err(e) => return Err(e.description().to_string())
     };
 
     let stdin = match child.stdin {
@@ -38,6 +39,6 @@ pub fn write(s: &str) -> Result<(), String> {
 
     match stdin.write(s.as_bytes()) {
         Ok(_) => Ok(()),
-        Err(e) => return Err(e.detail().unwrap_or("error writing to xclip".to_string()))
+        Err(e) => return Err(e.description().to_string())
     }
 }
