@@ -1,6 +1,3 @@
-#![feature(io)]
-#![feature(process)]
-
 #[cfg(target_os = "macos")]
 #[path = "clipboard_macos.rs"]
 mod clipboard;
